@@ -1,0 +1,18 @@
+[Unit]
+Description=Yach Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=cp /etc/hosts /etc/hosts.backup
+ExecStartPre=docker pull markcial/yacht
+ExecStart=docker run -d \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /etc/hosts:/hosts \
+  --name yacht.service markcial/yacht
+ExecStopPost=cp /etc/hosts.backup /etc/hosts
+ExecStop=docker rm -f yacht.service
+
+[Install]
+WantedBy=multi-user.target
