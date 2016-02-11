@@ -13,7 +13,8 @@ RUN apk add --update \
   && rm -rf /var/cache/apk/*
 
 RUN mkdir /hosts.d
+RUN touch /hosts.d/base
 WORKDIR /app
-COPY src /app
+COPY application /app
 
 CMD ["/usr/bin/python", "main.py"]
