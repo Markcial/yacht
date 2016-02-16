@@ -6,7 +6,7 @@ Requires=docker.service
 [Service]
 TimeoutStartSec=0
 ExecStartPre=/bin/cp /etc/hosts /etc/hosts.backup
-#ExecStartPre=/usr/bin/docker pull markcial/yacht
+ExecStartPre=/usr/bin/docker pull markcial/yacht
 ExecStart=/usr/bin/docker run \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /etc/hosts:/hosts \
