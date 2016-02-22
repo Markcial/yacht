@@ -33,6 +33,9 @@ class Host(object):
 
         self.hosts[ip] = name
 
+    def reset(self):
+        self.hosts = []
+
     def __str__(self):
         """
         string representation of all the complete host entries
@@ -73,6 +76,7 @@ class Watcher(object):
         :param event:
         :return:
         """
+        self.host.reset()
         self.host_entries()
         self.host.save()
         self.create_host_file()
@@ -106,7 +110,10 @@ class Watcher(object):
         :return:
         """
         details = self.client.inspect_container(container['Id'])
-        names = [name.split('/').pop() for name in container['Names']]
+        hostname = details['Config']['Hostname']
+        if details['Config']['Domainname'] != "":
+            hostname += '.'+details['Config']['Domainname']
+        names = [name.split('/').pop() for name in container['Names']] + [hostname]
         for ip in map(lambda (k, v): v['IPAddress'], details['NetworkSettings']['Networks'].iteritems()):
             for name in names:
                 self.host.add(ip, name)
